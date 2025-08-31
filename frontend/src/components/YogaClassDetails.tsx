@@ -63,12 +63,16 @@ const YogaClassDetails = () => {
         return <Loading />;
     }
 
+    // If image is an uploaded file, prefix with backend URL
+    const imageUrl = currentYogaClass?.image && currentYogaClass.image.startsWith('/uploads')
+        ? `${import.meta.env.VITE_API_URL}${currentYogaClass.image}`
+        : currentYogaClass?.image;
     return (
         <div className="max-w-6xl mx-auto my-10 px-2 sm:px-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 xl:gap-32">
                 <div className="h-[380px] p-4 rounded-xl pb-16 shadow-lg hover:shadow-xl bg-white">
                     <img
-                        src={currentYogaClass?.image}
+                        src={imageUrl}
                         alt={currentYogaClass?.name}
                         className="h-full w-full object-cover rounded-lg"
                     />

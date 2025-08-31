@@ -60,6 +60,7 @@ const AdminAddYogaClass = () => {
         useState<Record<string, boolean>>(initialSelectedDays);
     const [startTime, setStartTime] = useState<string>("");
     const [endTime, setEndTime] = useState<string>("");
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const context = useContext(Context);
 
@@ -121,25 +122,45 @@ const AdminAddYogaClass = () => {
         });
     };
 
-    const handleSubmitNewYogaClassForm = (
-        e: React.FormEvent<HTMLFormElement>
-    ) => {
+    const handleSubmitNewYogaClassForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        formState.startTime = convertTo12Hour(startTime);
-        formState.endTime = convertTo12Hour(endTime);
-
-        formState.duration = calculateDuration(startTime, endTime);
-
+        // Prepare frequency array
+        const frequency: string[] = [];
         for (let day in selectedDays) {
             if (selectedDays[day]) {
-                formState.frequency.push(day as WeekDays);
+                frequency.push(day);
             }
         }
 
-        setFormState({ ...formState });
+        // Prepare FormData
+        const formData = new FormData();
+        formData.append("name", formState.name);
+        formData.append("level", formState.level);
+        formData.append("instructor", formState.instructor);
+        formData.append("organization", formState.organization);
+        formData.append("startTime", convertTo12Hour(startTime));
+        formData.append("endTime", convertTo12Hour(endTime));
+        formData.append("duration", calculateDuration(startTime, endTime).toString());
+        frequency.forEach((day) => formData.append("frequency", day));
+        formData.append("healthCondition", formState.healthCondition);
+        formData.append("style", formState.style);
+        formData.append("price", formState.price.toString());
+        formData.append("rating", formState.rating.toString());
 
-        addNewYogaClassHandler(formState);
+        // Only send image URL if no file is selected
+        if (imageFile) {
+            formData.append("imageFile", imageFile);
+        } else if (formState.image) {
+            formData.append("image", formState.image);
+        }
+
+        // Debug logs to verify file and FormData
+        console.log("imageFile:", imageFile);
+        console.log("FormData keys:", Array.from(formData.keys()));
+        console.log("FormData imageFile value:", formData.get("imageFile"));
+
+        await addNewYogaClassHandler(formData);
 
         getAllYogaClass().then((data) => {
             setyogaClasses(data);
@@ -149,6 +170,13 @@ const AdminAddYogaClass = () => {
         setEndTime("");
         setSelectedDays({ ...initialSelectedDays });
         setFormState({ ...initialFormState });
+        setImageFile(null);
+    };
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setImageFile(event.target.files[0]);
+        }
     };
 
     return (
@@ -352,20 +380,29 @@ const AdminAddYogaClass = () => {
                             />
                         </label>
                     </div>
-                    <label
-                        htmlFor="image"
-                        className="text-gray-800 font-semibold flex flex-col"
-                    >
-                        Image
+                    <label htmlFor="image" className="text-gray-800 font-semibold flex flex-col">
+                        Image URL
                         <input
                             id="image"
                             type="url"
+                            name="image"
                             value={formState.image}
                             onChange={handleInputChange}
-                            required
                             placeholder="Enter image url"
                             className="bg-secondaryClr font-semibold placeholder:text-gray-500 p-4 rounded-xl outline-none border-none mt-1"
                         />
+                        <span className="mt-2">Or upload an image file:</span>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="mt-1"
+                        />
+                        {imageFile && (
+                            <span className="text-green-600 mt-1">
+                                Selected: {imageFile.name}
+                            </span>
+                        )}
                     </label>
                 </div>
                 <input

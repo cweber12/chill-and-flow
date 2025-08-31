@@ -29,12 +29,16 @@ const YogaCard = ({ yoga, btnType }: Props) => {
         setDays(yoga.frequency.length);
     }, [yoga]);
 
+    // If image is an uploaded file, prefix with backend URL
+    const imageUrl = yoga.image && yoga.image.startsWith('/uploads')
+        ? `${import.meta.env.VITE_API_URL}${yoga.image}`
+        : yoga.image;
     return (
         <div className="flex flex-col shadow-lg rounded-lg hover:scale-105 transition-all hover:shadow-xl gap-4 p-4 bg-white">
             <div className="flex space-x-6">
                 <img
                     className="h-28 min-w-28 w-28 object-cover rounded-lg shrink-0"
-                    src={yoga.image}
+                    src={imageUrl}
                     alt={yoga.name}
                 />
                 <div>

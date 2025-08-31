@@ -1,6 +1,6 @@
 const url = import.meta.env.VITE_API_URL;
 
-export const addNewYogaClassHandler = async (yogaData: YogaClass) => {
+export const addNewYogaClassHandler = async (formData: FormData) => {
     const cookies: { [key: string]: string } = document.cookie
         .split(";")
         .reduce((cookies, item) => {
@@ -12,10 +12,10 @@ export const addNewYogaClassHandler = async (yogaData: YogaClass) => {
     let res = await fetch(`${url}/yoga/add`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
             "auth-token": cookies["auth-token"],
+            // Do NOT set Content-Type for FormData!
         },
-        body: JSON.stringify(yogaData),
+        body: formData,
     });
 
     let data = await res.json();

@@ -102,10 +102,10 @@ const FilterYogaClass = () => {
     };
 
     return (
-        <div className="max-w-6xl bg-gradient-to-r from-mainClr to-yellow-400 rounded-lg px-8 flex items-center justify-between relative">
+        <div className="max-w-6xl bg-gradient-to-r from-mainClr to-[#468A9A] rounded-lg px-8 flex items-center justify-between relative">
             <div
                 onClick={() => setSearchResults(yogaClasses)}
-                className="text-xl font-bold cursor-pointer"
+                className="text-xl font-bold cursor-pointer hover:text-2xl"
             >
                 Reset
             </div>
@@ -118,7 +118,7 @@ const FilterYogaClass = () => {
                     <FaChevronDown
                         className={`${
                             open ? "rotate-180" : "rotate-0"
-                        } text-xl transition-all`}
+                        } text-xl transition-all hover:scale-150`}
                     />
                 </div>
                 <ul

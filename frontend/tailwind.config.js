@@ -8,8 +8,8 @@ export default {
                 ms: "860px",
             },
             colors: {
-                mainClr: "#FF5722",
-                secondaryClr: "#F5F5F5",
+                mainClr: "#26667F",
+                secondaryClr: "#D6DAC8",
             },
         },
     },

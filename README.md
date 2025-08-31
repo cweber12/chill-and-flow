@@ -98,3 +98,10 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 ## License
 
 MIT
+
+## CLI Commands
+
+Find the process ID (PID) using port 5000:
+netstat -ano | findstr :5000
+
+taskkill /PID <PID> /F

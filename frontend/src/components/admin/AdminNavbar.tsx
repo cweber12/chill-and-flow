@@ -31,13 +31,9 @@ const AdminNavbar = () => {
                     to="/admin/dashboard"
                     className="flex gap-2 justify-center items-center z-50"
                 >
-                    <img
-                        src={logo}
-                        alt="logo"
-                        className="h-8 w-8 sm:h-10 sm:w-10"
-                    />
+
                     <span className="text-xl sm:text-2xl font-extrabold">
-                        YogaMaster
+                        Chill & Flow
                     </span>
                 </Link>
 
