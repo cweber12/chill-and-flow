@@ -122,4 +122,41 @@ router.get("/get/:id", async (req, res) => {
     }
 });
 
+router.put("/update/:id", fetchUser, checkRole("ADMIN"), async (req, res) => {
+    try {
+        const updatedYogaClass = await YogaClass.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+        res.json({ success: true, yogaClass: updatedYogaClass });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+router.delete("/delete/:id", fetchUser, checkRole("ADMIN"), async (req, res) => {
+    try {
+        console.log("DELETE /yoga/delete/:id called");
+        console.log("Requested ID:", req.params.id);
+        // Check if ID is a valid ObjectId
+        if (!req.params.id || req.params.id.length !== 24) {
+            console.log("Invalid ID format");
+            return res.status(400).json({ success: false, error: "Invalid ID format" });
+        }
+        const deleted = await YogaClass.findByIdAndDelete(req.params.id);
+        if (!deleted) {
+            console.log("Yoga class not found for ID:", req.params.id);
+            return res.status(404).json({ success: false, error: "Yoga class not found" });
+        }
+        console.log("Yoga class deleted:", deleted);
+        res.json({ success: true, message: "Yoga class deleted" });
+    } catch (error) {
+        console.error("Error in DELETE /yoga/delete/:id:", error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 module.exports = router;
+
+
